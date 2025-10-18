@@ -18,7 +18,7 @@ const fetchJson = async <T>(url: string): Promise<T> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status}`);
+        throw new Error(`Falha ao buscar: ${response.status}`);
     }
 
     return response.json();
@@ -40,7 +40,7 @@ export const useTwoFactorAuth = () => {
             const { svg } = await fetchJson<TwoFactorSetupData>(qrCode.url());
             setQrCodeSvg(svg);
         } catch {
-            setErrors((prev) => [...prev, 'Failed to fetch QR code']);
+            setErrors((prev) => [...prev, 'Falha ao buscar o QR code']);
             setQrCodeSvg(null);
         }
     }, []);
@@ -52,7 +52,7 @@ export const useTwoFactorAuth = () => {
             );
             setManualSetupKey(key);
         } catch {
-            setErrors((prev) => [...prev, 'Failed to fetch a setup key']);
+            setErrors((prev) => [...prev, 'Falha ao buscar a chave de configuração']);
             setManualSetupKey(null);
         }
     }, []);
@@ -73,7 +73,7 @@ export const useTwoFactorAuth = () => {
             const codes = await fetchJson<string[]>(recoveryCodes.url());
             setRecoveryCodesList(codes);
         } catch {
-            setErrors((prev) => [...prev, 'Failed to fetch recovery codes']);
+            setErrors((prev) => [...prev, 'Falha ao buscar os códigos de recuperação']);
             setRecoveryCodesList([]);
         }
     }, [clearErrors]);

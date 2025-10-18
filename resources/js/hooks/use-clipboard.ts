@@ -10,7 +10,7 @@ export function useClipboard(): [CopiedValue, CopyFn] {
 
     const copy: CopyFn = useCallback(async (text) => {
         if (!navigator?.clipboard) {
-            console.warn('Clipboard not supported');
+            console.warn('Área de transferência não suportada');
 
             return false;
         }
@@ -21,7 +21,7 @@ export function useClipboard(): [CopiedValue, CopyFn] {
 
             return true;
         } catch (error) {
-            console.warn('Copy failed', error);
+            console.warn('Falha ao copiar', error);
             setCopiedText(null);
 
             return false;
