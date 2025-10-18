@@ -7,7 +7,7 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
-import { type User } from '@/types';
+import { type SharedData, type User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { KeyRound, LogOut, Palette, ShieldCheck, UserRound } from 'lucide-react';
 
@@ -18,15 +18,19 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user, logoutHref }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
-    const page = usePage();
+    const page = usePage<SharedData>();
 
     const handleLogout = () => {
         cleanup();
         router.flushAll();
     };
 
-    const href = logoutHref ?? logout();
-    const baseSettingsPath = page.url.startsWith('/admin/settings') ? '/admin/settings' : '/settings';
+    const fallbackLogoutHref = page.props.logoutRoute ?? logout();
+    const href = logoutHref ?? fallbackLogoutHref;
+    const normalizedLogoutHref = href.startsWith('/') ? href.slice(1) : href;
+    const isAdminLogout =
+        normalizedLogoutHref.startsWith('admin/') || normalizedLogoutHref.includes('/admin/');
+    const baseSettingsPath = isAdminLogout ? '/admin/settings' : '/settings';
     const settingsItems = [
         {
             title: 'Profile',
