@@ -7,10 +7,9 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
-import { edit } from '@/routes/profile';
 import { type User } from '@/types';
-import { Link, router } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { KeyRound, LogOut, Palette, ShieldCheck, UserRound } from 'lucide-react';
 
 interface UserMenuContentProps {
     user: User;
@@ -19,6 +18,7 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user, logoutHref }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const page = usePage();
 
     const handleLogout = () => {
         cleanup();
@@ -26,6 +26,29 @@ export function UserMenuContent({ user, logoutHref }: UserMenuContentProps) {
     };
 
     const href = logoutHref ?? logout();
+    const baseSettingsPath = page.url.startsWith('/admin/settings') ? '/admin/settings' : '/settings';
+    const settingsItems = [
+        {
+            title: 'Profile',
+            href: `${baseSettingsPath}/profile`,
+            icon: UserRound,
+        },
+        {
+            title: 'Password',
+            href: `${baseSettingsPath}/password`,
+            icon: KeyRound,
+        },
+        {
+            title: 'Two-Factor Auth',
+            href: `${baseSettingsPath}/two-factor`,
+            icon: ShieldCheck,
+        },
+        {
+            title: 'Appearance',
+            href: `${baseSettingsPath}/appearance`,
+            icon: Palette,
+        },
+    ];
 
     return (
         <>
@@ -36,18 +59,20 @@ export function UserMenuContent({ user, logoutHref }: UserMenuContentProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                    <Link
-                        className="block w-full"
-                        href={edit()}
-                        as="button"
-                        prefetch
-                        onClick={cleanup}
-                    >
-                        <Settings className="mr-2" />
-                        Settings
-                    </Link>
-                </DropdownMenuItem>
+                {settingsItems.map(({ title, href: itemHref, icon: Icon }) => (
+                    <DropdownMenuItem asChild key={itemHref}>
+                        <Link
+                            className="flex w-full items-center"
+                            href={itemHref}
+                            as="button"
+                            prefetch
+                            onClick={cleanup}
+                        >
+                            <Icon className="mr-2" />
+                            {title}
+                        </Link>
+                    </DropdownMenuItem>
+                ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>

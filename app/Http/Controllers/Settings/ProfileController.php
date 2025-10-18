@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\Admin;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,19 +46,27 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = $request->user();
+        $guard = $user instanceof Admin ? 'admin' : null;
+        $currentPasswordRule = $guard !== null ? "current_password:{$guard}" : 'current_password';
+
         $request->validate([
-            'password' => ['required', 'current_password'],
+            'password' => ['required', $currentPasswordRule],
         ]);
 
-        $user = $request->user();
+        if ($guard !== null) {
+            Auth::guard($guard)->logout();
+        } else {
+            Auth::logout();
+        }
 
-        Auth::logout();
-
-        $user->delete();
+        $user?->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return $guard !== null
+            ? redirect()->route('admin.login')
+            : redirect('/');
     }
 }

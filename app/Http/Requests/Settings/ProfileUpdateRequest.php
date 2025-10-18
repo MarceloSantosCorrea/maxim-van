@@ -16,6 +16,9 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
+        $table = $user?->getTable() ?? (new User())->getTable();
+
         return [
             'name' => ['required', 'string', 'max:255'],
 
@@ -25,7 +28,7 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
+                Rule::unique($table, 'email')->ignore($user?->getKey()),
             ],
         ];
     }
