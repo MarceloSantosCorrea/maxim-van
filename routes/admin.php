@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Auth\AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\AdminNewPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminPasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\AdminRegisteredUserController;
+use App\Http\Controllers\Admin\CompanyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,5 +42,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', function () {
             return Inertia::render('admin/dashboard');
         })->name('dashboard');
+
+        Route::resource('companies', CompanyController::class)->except(['create', 'edit', 'show']);
     });
 });
