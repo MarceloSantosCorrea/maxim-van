@@ -45,6 +45,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'logoutRoute' => $request->routeIs('admin.*')
+                ? route('admin.logout', absolute: false)
+                : route('logout', absolute: false),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

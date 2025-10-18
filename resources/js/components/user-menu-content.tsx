@@ -14,15 +14,18 @@ import { LogOut, Settings } from 'lucide-react';
 
 interface UserMenuContentProps {
     user: User;
+    logoutHref?: string;
 }
 
-export function UserMenuContent({ user }: UserMenuContentProps) {
+export function UserMenuContent({ user, logoutHref }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
 
     const handleLogout = () => {
         cleanup();
         router.flushAll();
     };
+
+    const href = logoutHref ?? logout();
 
     return (
         <>
@@ -50,7 +53,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuItem asChild>
                 <Link
                     className="block w-full"
-                    href={logout()}
+                    href={href}
                     as="button"
                     onClick={handleLogout}
                     data-test="logout-button"
