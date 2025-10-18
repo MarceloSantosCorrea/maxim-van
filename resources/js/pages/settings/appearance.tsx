@@ -10,20 +10,20 @@ export default function Appearance() {
     const { url } = usePage();
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Appearance settings',
+            title: 'Configurações de aparência',
             href: url,
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Appearance settings" />
+            <Head title="Configurações de aparência" />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Appearance settings"
-                        description="Update your account's appearance settings"
+                        title="Configurações de aparência"
+                        description="Atualize as preferências de aparência da sua conta"
                     />
                     <AppearanceTabs />
                 </div>
